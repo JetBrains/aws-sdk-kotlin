@@ -6,6 +6,9 @@ import java.util.Properties
 buildscript {
     repositories {
         mavenCentral()
+        maven {
+            url = uri("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev")
+        }
     }
 }
 
@@ -17,6 +20,9 @@ plugins {
 repositories {
     mavenCentral()
     gradlePluginPortal()
+    maven {
+        url = uri("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev")
+    }
 }
 
 fun loadVersions() {

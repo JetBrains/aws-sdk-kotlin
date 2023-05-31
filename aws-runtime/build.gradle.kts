@@ -95,7 +95,8 @@ task<org.jetbrains.kotlin.gradle.testing.internal.KotlinTestReport>("rootAllTest
             if (tasks.findByName("allTests") != null) {
                 val provider = tasks.named("allTests")
                 val allTestsTaskProvider = provider as TaskProvider<org.jetbrains.kotlin.gradle.testing.internal.KotlinTestReport>
-                rootAllTest.addChild(allTestsTaskProvider)
+//                Temporary commented out because it causes fail of any task
+//                rootAllTest.addChild(allTestsTaskProvider)
                 rootAllTest.dependsOn(allTestsTaskProvider)
             }
         }

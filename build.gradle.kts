@@ -8,6 +8,9 @@ import java.util.Properties
 
 plugins {
     kotlin("jvm") version "1.8.10" apply false
+//    kotlin("jvm") version "1.9.0-Beta" apply false
+//    kotlin("jvm") version "1.9.0-RC-238" apply false
+//    kotlin("jvm") version "1.9.20-dev-2687" apply false
     id("org.jetbrains.dokka")
     id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
 }
@@ -16,6 +19,9 @@ allprojects {
     repositories {
         mavenLocal()
         mavenCentral()
+        maven {
+            url = uri("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev")
+        }
     }
 
     tasks.withType<org.jetbrains.dokka.gradle.AbstractDokkaTask>().configureEach {
@@ -166,7 +172,7 @@ tasks.register<JavaExec>("ktlint") {
     description = "Check Kotlin code style."
     group = "Verification"
     classpath = configurations.getByName("ktlint")
-    main = "com.pinterest.ktlint.Main"
+    mainClass.set("com.pinterest.ktlint.Main")
     args = lintPaths
     jvmArgs("--add-opens", "java.base/java.lang=ALL-UNNAMED")
 }
@@ -175,7 +181,7 @@ tasks.register<JavaExec>("ktlintFormat") {
     description = "Auto fix Kotlin code style violations"
     group = "formatting"
     classpath = configurations.getByName("ktlint")
-    main = "com.pinterest.ktlint.Main"
+    mainClass.set("com.pinterest.ktlint.Main")
     args = listOf("-F") + lintPaths
     jvmArgs("--add-opens", "java.base/java.lang=ALL-UNNAMED")
 }
