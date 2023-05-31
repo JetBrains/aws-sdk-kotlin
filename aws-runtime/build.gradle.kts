@@ -8,7 +8,7 @@ description = "AWS client runtime support for generated service clients"
 plugins {
     kotlin("multiplatform")
     id("org.jetbrains.dokka")
-    id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.12.1"
+    id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.13.1"
     jacoco
 }
 
@@ -111,4 +111,7 @@ task<org.jetbrains.kotlin.gradle.testing.internal.KotlinTestReport>("rootAllTest
 
 apiValidation {
     nonPublicMarkers.add("aws.sdk.kotlin.runtime.InternalSdkApi")
+    // temporary WA for K2 compilations
+    // see https://github.com/Kotlin/binary-compatibility-validator/issues/139
+    validationDisabled = findProperty("kotlin.experimental.tryK2") == "true"
 }
