@@ -8,7 +8,7 @@ description = "AWS client runtime support for generated service clients"
 plugins {
     kotlin("multiplatform")
     id("org.jetbrains.dokka")
-    id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.13.1"
+    id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.12.1"
     jacoco
 }
 
@@ -113,5 +113,9 @@ apiValidation {
     nonPublicMarkers.add("aws.sdk.kotlin.runtime.InternalSdkApi")
     // temporary WA for K2 compilations
     // see https://github.com/Kotlin/binary-compatibility-validator/issues/139
-    validationDisabled = findProperty("kotlin.experimental.tryK2") == "true"
+//    validationDisabled = findProperty("kotlin.experimental.tryK2") == "true"
+//    validation disabled while atimicfu don't support 0.6.0 version of kotlinx-metadata-jvm
+//    which comes from binary-compatibility-validator version 0.13.1
+//   see  https://github.com/Kotlin/kotlinx-atomicfu/issues/281
+    validationDisabled = true
 }

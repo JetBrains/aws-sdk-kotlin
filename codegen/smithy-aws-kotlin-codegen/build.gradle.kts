@@ -16,6 +16,8 @@ version = sdkVersion
 val smithyVersion: String by project
 val kotestVersion: String by project
 val kotlinVersion: String by project
+val kotlin_version: String? by project
+val finalKotlinVersion = kotlin_version ?: kotlinVersion
 val junitVersion: String by project
 val smithyKotlinVersion: String by project
 val kotlinJVMTargetVersion: String by project
@@ -34,7 +36,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-params:$junitVersion")
     testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:$kotlinVersion")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:$finalKotlinVersion")
     testImplementation("software.amazon.smithy.kotlin:smithy-kotlin-codegen-testutils:$smithyKotlinVersion")
 
     testImplementation("org.slf4j:slf4j-api:$slf4jVersion")

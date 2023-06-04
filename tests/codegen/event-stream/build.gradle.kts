@@ -11,6 +11,13 @@ plugins {
 }
 
 description = "Event stream codegen integration test suite"
+repositories {
+    mavenCentral()
+    mavenLocal()
+    val kotlin_repo_url: String? by project
+    logger.info("[COMMUNITY_PROJECT_BUILD] kotlin repository url: $kotlin_repo_url")
+    kotlin_repo_url?.also { maven(it) }
+}
 
 dependencies {
     implementation(project(":codegen:smithy-aws-kotlin-codegen"))

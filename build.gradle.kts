@@ -7,10 +7,7 @@ import java.time.Duration
 import java.util.Properties
 
 plugins {
-    kotlin("jvm") version "1.8.10" apply false
-//    kotlin("jvm") version "1.9.0-Beta" apply false
-//    kotlin("jvm") version "1.9.0-RC-238" apply false
-//    kotlin("jvm") version "1.9.20-dev-2687" apply false
+    kotlin("jvm") apply false
     id("org.jetbrains.dokka")
     id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
 }
@@ -19,9 +16,9 @@ allprojects {
     repositories {
         mavenLocal()
         mavenCentral()
-        maven {
-            url = uri("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev")
-        }
+        val kotlin_repo_url: String? by project
+        logger.info("[COMMUNITY_PROJECT_BUILD] kotlin repository url: $kotlin_repo_url")
+        kotlin_repo_url?.also { maven(it) }
     }
 
     tasks.withType<org.jetbrains.dokka.gradle.AbstractDokkaTask>().configureEach {

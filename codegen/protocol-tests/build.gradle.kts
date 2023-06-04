@@ -102,7 +102,13 @@ open class ProtocolTestTask : DefaultTask() {
         project.exec {
             workingDir = projection.projectionRootDir
             executable = gradlew
-            args = listOf("test")
+            val kotlin_repo_url: String? by project
+            logger.info("[COMMUNITY_PROJECT_BUILD] kotlin repository url: $kotlin_repo_url")
+            val kotlinVersion: String by project
+            val kotlin_version: String? by project
+            val finalKotlinVersion = kotlin_version ?: kotlinVersion
+            val K2 = if (project.hasProperty("kotlin.experimental.tryK2")) project.properties["kotlin.experimental.tryK2"] == "true" else false
+            args = listOf("test", "-Pkotlin_repo_url=$kotlin_repo_url", "-Pkotlin_version=$finalKotlinVersion", "-Pkotlin.experimental.tryK2=$K2")
         }
     }
 }
