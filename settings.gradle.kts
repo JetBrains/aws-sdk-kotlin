@@ -69,32 +69,35 @@ file("services").listFiles().forEach {
  * compositeProjects=~/repos/smithy-kotlin,/tmp/some/other/thing,../../another/project
  *
  */
-val compositeProjectList = try {
-    val localProperties = java.util.Properties()
-    localProperties.load(File(rootProject.projectDir, "local.properties").inputStream())
-    val filePaths = localProperties.getProperty("compositeProjects")
-        ?.splitToSequence(",") // Split comma delimited string into sequence
-        ?.map { it.replaceFirst("^~".toRegex(), System.getProperty("user.home")) } // expand user dir
-        ?.filter { it.isNotBlank() }
-        ?.map { file(it) } // Create file from path
-        ?.toList()
-        ?: emptyList()
+//val compositeProjectList = try {
+//    val localProperties = java.util.Properties()
+//    localProperties.load(File(rootProject.projectDir, "local.properties").inputStream())
+//    val filePaths = localProperties.getProperty("compositeProjects")
+//        ?.splitToSequence(",") // Split comma delimited string into sequence
+//        ?.map { it.replaceFirst("^~".toRegex(), System.getProperty("user.home")) } // expand user dir
+//        ?.filter { it.isNotBlank() }
+//        ?.map { file(it) } // Create file from path
+//        ?.toList()
+//        ?: emptyList()
+//
+//    if (filePaths.isNotEmpty()) println("Adding ${filePaths.size} composite build directories from local.properties.")
+//    filePaths
+//} catch (e: java.io.FileNotFoundException) {
+//    listOf(file("../smithy-kotlin_mpp")) // Default path, not an error.
+//} catch (e: Throwable) {
+//    logger.error("Failed to load project paths from local.properties. Assuming defaults.", e)
+//    listOf(file("../smithy-kotlin_mpp"))
+//}
 
-    if (filePaths.isNotEmpty()) println("Adding ${filePaths.size} composite build directories from local.properties.")
-    filePaths
-} catch (e: java.io.FileNotFoundException) {
-    listOf(file("../smithy-kotlin_mpp")) // Default path, not an error.
-} catch (e: Throwable) {
-    logger.error("Failed to load project paths from local.properties. Assuming defaults.", e)
-    listOf(file("../smithy-kotlin_mpp"))
-}
+// too flaky so I've replaced it with simple includeBuild
+//compositeProjectList.forEach { projectRoot ->
+//    when (projectRoot.exists()) {
+//        true -> {
+//            println("Including build '$projectRoot'")
+//            includeBuild(projectRoot)
+//        }
+//        false -> println("Ignoring invalid build directory '$projectRoot'.")
+//    }
+//}
 
-compositeProjectList.forEach { projectRoot ->
-    when (projectRoot.exists()) {
-        true -> {
-            println("Including build '$projectRoot'")
-            includeBuild(projectRoot)
-        }
-        false -> println("Ignoring invalid build directory '$projectRoot'.")
-    }
-}
+includeBuild("../smithy-kotlin_mpp")
