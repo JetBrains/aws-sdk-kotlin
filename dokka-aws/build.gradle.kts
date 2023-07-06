@@ -16,7 +16,7 @@ dependencies {
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "18"
         allWarningsAsErrors = false // FIXME Dokka bundles stdlib into the classpath, causing an unfixable warning
     }
 }
