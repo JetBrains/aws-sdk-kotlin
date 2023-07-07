@@ -96,14 +96,15 @@ internal fun List<Pair<FileLine, Token>>.toSectionMap(traceSpan: TraceSpan): Map
                     traceSpan.warnParse(line) { "Ignoring invalid property '${token.key}'" }
                     continue
                 }
+                //TODO why smart cast is not working with 2.0 lv?
                 if (!currentSection.isValid) {
-                    traceSpan.warnParse(line) { "Ignoring property under invalid ${currentSection.sectionName} '${currentSection.name}'" }
+                    traceSpan.warnParse(line) { "Ignoring property under invalid ${(currentSection as Token.Section).sectionName} '${(currentSection as Token.Section).name}'" }
                     continue
                 }
 
                 val profile = this[currentSection]!!
                 if (profile.containsKey(token.key)) {
-                    traceSpan.warnParse(line) { "'${token.key}' defined multiple times in ${currentSection.sectionName} '${currentSection.name}'" }
+                    traceSpan.warnParse(line) { "'${token.key}' defined multiple times in ${(currentSection as Token.Section).sectionName} '${(currentSection as Token.Section).name}'" }
                 }
 
                 if (profile.containsKey(token.key)) {
