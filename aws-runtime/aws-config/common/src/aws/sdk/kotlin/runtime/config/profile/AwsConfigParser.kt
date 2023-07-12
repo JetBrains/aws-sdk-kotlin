@@ -96,7 +96,7 @@ internal fun List<Pair<FileLine, Token>>.toSectionMap(traceSpan: TraceSpan): Map
                     traceSpan.warnParse(line) { "Ignoring invalid property '${token.key}'" }
                     continue
                 }
-                //TODO why smart cast is not working with 2.0 lv?
+                //KT-55338 и KT-57071
                 if (!currentSection.isValid) {
                     traceSpan.warnParse(line) { "Ignoring property under invalid ${(currentSection as Token.Section).sectionName} '${(currentSection as Token.Section).name}'" }
                     continue
