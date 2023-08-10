@@ -25,4 +25,7 @@ internal expect class DefaultRegionProviderChain constructor(
     platformProvider: PlatformProvider = PlatformProvider.System,
     imdsClient: Lazy<InstanceMetadataProvider> = lazy { ImdsClient() },
     profile: LazyAsyncValue<AwsProfile> = asyncLazy { loadAwsSharedConfig(platformProvider).activeProfile },
-) : RegionProvider, Closeable
+) : RegionProvider, Closeable {
+    override suspend fun getRegion(): String?
+    override fun close()
+}
