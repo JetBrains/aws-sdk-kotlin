@@ -108,7 +108,7 @@ open class ProtocolTestTask : DefaultTask() {
             val kotlin_version: String? by project
             val finalKotlinVersion = kotlin_version ?: project.properties["community.project.kotlin.version"] ?: kotlinVersion
             val K2 = false
-            args = listOf("test", "-Pkotlin_repo_url=$kotlin_repo_url", "-Pkotlin_version=$finalKotlinVersion", "-Pkotlin.experimental.tryK2=$K2")
+            args = listOf("test", "-Pkotlin_repo_url=$kotlin_repo_url", "-Pkotlin_version=$finalKotlinVersion")
         }
     }
 }
