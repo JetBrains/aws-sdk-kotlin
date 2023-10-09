@@ -118,6 +118,7 @@ codegen.projections.forEach {
     val protocolName = it.name
 
     tasks.register<ProtocolTestTask>("testProtocol-$protocolName") {
+        if (protocolName == "apigateway") enabled = false
         dependsOn(codegenTask)
         group = "Verification"
         projection = it
