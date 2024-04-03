@@ -73,7 +73,8 @@ subprojects {
                 val platform = name.substring(0, name.length - 4)
                 kotlin.srcDir("$platform/$srcDir")
                 resources.srcDir("$platform/${resourcesPrefix}resources")
-                languageSettings.progressiveMode = true
+//                TODO: re-enable after 2.0.0 release
+//                languageSettings.progressiveMode = true
                 optinAnnotations.forEach { languageSettings.optIn(it) }
             }
         }
