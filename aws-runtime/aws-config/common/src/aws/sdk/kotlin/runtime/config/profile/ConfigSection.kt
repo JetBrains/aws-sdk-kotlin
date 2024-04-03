@@ -8,7 +8,6 @@ package aws.sdk.kotlin.runtime.config.profile
 import aws.sdk.kotlin.runtime.InternalSdkApi
 
 @InternalSdkApi
-@ConsistentCopyVisibility
 public data class ConfigSection internal constructor(
     public val name: String,
     internal val properties: Map<String, AwsConfigValue>,
