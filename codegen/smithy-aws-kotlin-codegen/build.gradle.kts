@@ -57,6 +57,10 @@ val generateSdkRuntimeVersion by tasks.registering {
     }
 }
 
+kotlin{
+    jvmToolchain(8)
+}
+
 tasks.compileKotlin {
     kotlinOptions.jvmTarget = kotlinJVMTargetVersion
     dependsOn(generateSdkRuntimeVersion)

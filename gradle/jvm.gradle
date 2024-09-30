@@ -5,7 +5,7 @@
 
 kotlin {
     targets {
-        fromPreset(presets.jvm, 'jvm')
+        jvm()
     }
 
     sourceSets {

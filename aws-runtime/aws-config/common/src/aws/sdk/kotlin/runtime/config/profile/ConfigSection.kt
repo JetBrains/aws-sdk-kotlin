@@ -8,7 +8,7 @@ package aws.sdk.kotlin.runtime.config.profile
 import aws.sdk.kotlin.runtime.InternalSdkApi
 
 @InternalSdkApi
-public data class ConfigSection internal constructor(
+public data class ConfigSection constructor(
     public val name: String,
     internal val properties: Map<String, AwsConfigValue>,
     internal val sectionType: ConfigSectionType = ConfigSectionType.PROFILE,
@@ -28,7 +28,7 @@ public data class ConfigSection internal constructor(
     }
 }
 
-internal enum class ConfigSectionType {
+public enum class ConfigSectionType {
     PROFILE,
     SSO_SESSION,
 }
