@@ -136,8 +136,10 @@ subprojects{
         }
     }
     pluginManager.withPlugin("org.jetbrains.kotlin.multiplatform") {
-        configure<KotlinMultiplatformExtension> {
-            configureCompilerOptions(project.name)
+        if (project.name != "dynamodb-mapper") {
+            configure<KotlinMultiplatformExtension> {
+                configureCompilerOptions(project.name)
+            }
         }
     }
     pluginManager.withPlugin("org.jetbrains.kotlin.android") {
