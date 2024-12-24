@@ -21,6 +21,10 @@ buildscript {
         classpath(libs.kotlinx.atomicfu.plugin)
         // Add our custom gradle build logic to buildscript classpath
         classpath(libs.aws.kotlin.repo.tools.build.support)
+
+        // WA for https://youtrack.jetbrains.com/issue/KT-73357/
+        // remove after updated dependencies will not bring an old version.
+        classpath("org.jetbrains.kotlin:kotlin-compiler-embeddable:${libs.versions.kotlin.version.get()}")
     }
 
     configurations.classpath {
