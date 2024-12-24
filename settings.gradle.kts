@@ -5,7 +5,6 @@
 
 pluginManagement {
     repositories {
-        mavenLocal()
         mavenCentral()
         gradlePluginPortal()
         maven {
@@ -15,6 +14,11 @@ pluginManagement {
                 includeGroupByRegex("""aws\.sdk\.kotlin.*""")
             }
         }
+
+        val kotlin_repo_url: String? by settings
+        kotlin_repo_url?.let { maven(it) }
+
+        mavenLocal()
     }
     resolutionStrategy {
         val sdkVersion: String by settings
@@ -28,19 +32,31 @@ pluginManagement {
 
 dependencyResolutionManagement {
     repositories {
-        mavenLocal {
-            content {
-                excludeGroupByRegex("""org\.jetbrains\.kotlin.*""")
-                excludeGroupByRegex("""org\.jetbrains\.kotlinx.*""")
-                excludeGroup("org.jetbrains")
-            }
-        }
         mavenCentral()
         maven {
             name = "kotlinRepoTools"
             url = java.net.URI("https://d2gys1nrxnjnyg.cloudfront.net/releases")
             content {
                 includeGroupByRegex("""aws\.sdk\.kotlin.*""")
+            }
+        }
+
+        val kotlin_repo_url: String? by settings
+        kotlin_repo_url?.let { maven(it) }
+
+        mavenLocal()
+    }
+
+    versionCatalogs {
+        create("libs") {
+            val kotlin_version: String? by settings
+            if (kotlin_version != null) {
+                version("kotlin-version", kotlin_version)
+            }
+
+            val ksp_version: String? by settings
+            if (ksp_version != null) {
+                version("ksp-version", ksp_version)
             }
         }
     }
@@ -117,44 +133,46 @@ if (benchmarkServices.all { it.isBootstrappedService }) {
     logger.warn("Skipping :tests:benchmarks:service-benchmarks because these service(s) are not bootstrapped: $missing")
 }
 
-/**
- * The following code enables to optionally include aws-sdk-kotlin dependencies in source form for easier
- * development.  By default, if `smithy-kotlin` exists as a directory at the same level as `aws-sdk-kotlin`
- * then `smithy-kotlin` will be added as a composite build.  To override this behavior, for example to add
- * more composite builds, specify a different directory for `smithy-kotlin`, or to disable the feature entirely,
- * a local.properties file can be added or amended such that the property `compositeProjects` specifies
- * a comma delimited list of paths to project roots that shall be added as composite builds.  If the list is
- * empty to builds will be added.  Invalid directories are ignored.  Example local.properties:
- *
- * compositeProjects=~/repos/smithy-kotlin,/tmp/some/other/thing,../../another/project
- *
- */
-val compositeProjectList = try {
-    val localProperties = java.util.Properties()
-    localProperties.load(File(rootProject.projectDir, "local.properties").inputStream())
-    val propertyVal = localProperties.getProperty("compositeProjects") ?: "../smithy-kotlin"
-    val filePaths = propertyVal
-        .splitToSequence(",") // Split comma delimited string into sequence
-        .map { it.replaceFirst("^~".toRegex(), System.getProperty("user.home")) } // expand user dir
-        .filter { it.isNotBlank() }
-        .map { file(it) } // Create file from path
-        .toList()
+///**
+// * The following code enables to optionally include aws-sdk-kotlin dependencies in source form for easier
+// * development.  By default, if `smithy-kotlin` exists as a directory at the same level as `aws-sdk-kotlin`
+// * then `smithy-kotlin` will be added as a composite build.  To override this behavior, for example to add
+// * more composite builds, specify a different directory for `smithy-kotlin`, or to disable the feature entirely,
+// * a local.properties file can be added or amended such that the property `compositeProjects` specifies
+// * a comma delimited list of paths to project roots that shall be added as composite builds.  If the list is
+// * empty to builds will be added.  Invalid directories are ignored.  Example local.properties:
+// *
+// * compositeProjects=~/repos/smithy-kotlin,/tmp/some/other/thing,../../another/project
+// *
+// */
+//val compositeProjectList = try {
+//    val localProperties = java.util.Properties()
+//    localProperties.load(File(rootProject.projectDir, "local.properties").inputStream())
+//    val propertyVal = localProperties.getProperty("compositeProjects") ?: "../smithy-kotlin"
+//    val filePaths = propertyVal
+//        .splitToSequence(",") // Split comma delimited string into sequence
+//        .map { it.replaceFirst("^~".toRegex(), System.getProperty("user.home")) } // expand user dir
+//        .filter { it.isNotBlank() }
+//        .map { file(it) } // Create file from path
+//        .toList()
+//
+//    if (filePaths.isNotEmpty()) println("Adding ${filePaths.size} composite build directories from local.properties.")
+//    filePaths
+//} catch (e: java.io.FileNotFoundException) {
+//    listOf(file("../smithy-kotlin")) // Default path, not an error.
+//} catch (e: Throwable) {
+//    logger.error("Failed to load project paths from local.properties. Assuming defaults.", e)
+//    listOf(file("../smithy-kotlin"))
+//}
+//
+//compositeProjectList.forEach { projectRoot ->
+//    when (projectRoot.exists()) {
+//        true -> {
+//            println("Including build '$projectRoot'")
+//            includeBuild(projectRoot)
+//        }
+//        false -> println("Ignoring invalid build directory '$projectRoot'.")
+//    }
+//}
 
-    if (filePaths.isNotEmpty()) println("Adding ${filePaths.size} composite build directories from local.properties.")
-    filePaths
-} catch (e: java.io.FileNotFoundException) {
-    listOf(file("../smithy-kotlin")) // Default path, not an error.
-} catch (e: Throwable) {
-    logger.error("Failed to load project paths from local.properties. Assuming defaults.", e)
-    listOf(file("../smithy-kotlin"))
-}
-
-compositeProjectList.forEach { projectRoot ->
-    when (projectRoot.exists()) {
-        true -> {
-            println("Including build '$projectRoot'")
-            includeBuild(projectRoot)
-        }
-        false -> println("Ignoring invalid build directory '$projectRoot'.")
-    }
-}
+includeBuild("../smithy-kotlin_mpp")

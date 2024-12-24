@@ -8,6 +8,11 @@ import aws.sdk.kotlin.gradle.publishing.SonatypeCentralPortalPublishTask
 import aws.sdk.kotlin.gradle.publishing.SonatypeCentralPortalWaitForPublicationTask
 import aws.sdk.kotlin.gradle.publishing.configureJarReduction
 import aws.sdk.kotlin.gradle.util.typedProp
+import org.jetbrains.kotlin.gradle.dsl.HasConfigurableKotlinCompilerOptions
+import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import java.net.URL
 
 buildscript {
     // NOTE: buildscript classpath for the root project is the parent classloader for the subprojects, we
@@ -101,3 +106,39 @@ tasks.register<SonatypeCentralPortalPublishTask>("publishToCentralPortal") { }
 tasks.register<SonatypeCentralPortalWaitForPublicationTask>("waitForCentralPortalPublication") { }
 
 configureJarReduction("aws/sdk/kotlin")
+fun HasConfigurableKotlinCompilerOptions<*>.configureCompilerOptions(name: String) {
+    compilerOptions {
+        val kotlin_api_version: String? by project
+        val kotlin_language_version: String? by project
+
+        kotlin_language_version?.let {
+            println("[$name] Custom LanguageVersion: $it")
+            languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.fromVersion(it))
+        }
+
+        kotlin_api_version?.let {
+            println("[$name] Custom ApiVersion: $it")
+            apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.fromVersion(it))
+        }
+
+        freeCompilerArgs.add("-Xpartial-linkage-loglevel=ERROR")
+    }
+}
+
+subprojects{
+    pluginManager.withPlugin("org.jetbrains.kotlin.jvm") {
+        configure<KotlinJvmExtension> {
+            configureCompilerOptions(project.name)
+        }
+    }
+    pluginManager.withPlugin("org.jetbrains.kotlin.multiplatform") {
+        configure<KotlinMultiplatformExtension> {
+            configureCompilerOptions(project.name)
+        }
+    }
+    pluginManager.withPlugin("org.jetbrains.kotlin.android") {
+        configure<KotlinAndroidExtension> {
+            configureCompilerOptions(project.name)
+        }
+    }
+}
