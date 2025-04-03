@@ -35,7 +35,7 @@ subprojects {
         optinAnnotations.forEach { languageSettings.optIn(it) }
     }
 
-    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
         dependsOn(tasks.generateSmithyProjections)
         compilerOptions.allWarningsAsErrors = false
     }

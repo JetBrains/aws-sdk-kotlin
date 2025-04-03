@@ -77,6 +77,12 @@ subprojects {
                         }
                     }
 
+                    compileTaskProvider.configure {
+                        // Enable coroutine runTests in 1.6.10
+                        // NOTE: may be removed after coroutines-test runTests becomes stable
+                        compilerOptions.freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
+                    }
+
                     tasks.register<Test>("e2eTest") {
                         description = "Run e2e service tests"
                         group = "verification"
