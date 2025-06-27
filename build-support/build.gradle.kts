@@ -11,15 +11,6 @@ plugins {
 
 group = "aws.sdk.kotlin"
 
-repositories {
-    mavenCentral()
-
-    val kotlin_repo_url: String? by project
-    kotlin_repo_url?.let { maven(it) }
-
-    mavenLocal()
-}
-
 dependencies {
     compileOnly(kotlin("gradle-plugin"))
     compileOnly(kotlin("gradle-plugin-api"))
