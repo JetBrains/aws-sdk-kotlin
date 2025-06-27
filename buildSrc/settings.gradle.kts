@@ -5,10 +5,33 @@
 
 rootProject.name = "buildSrc"
 
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        val kotlin_repo_url: String? by settings
+        kotlin_repo_url?.let { maven(it) }
+    }
+}
+
 dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        val kotlin_repo_url: String? by settings
+        kotlin_repo_url?.let { maven(it) }
+    }
+
     versionCatalogs {
         create("libs") {
             from(files("../gradle/libs.versions.toml"))
+
+            val kotlinVersionOverride = providers.gradleProperty("kotlin_version")
+            if (kotlinVersionOverride.isPresent) {
+                println("[aws-sdk-kotlin's buildSrc] Overriding kotlin-version to ${kotlinVersionOverride.get()}")
+                version("kotlin-version", kotlinVersionOverride.get())
+            }
         }
     }
 }

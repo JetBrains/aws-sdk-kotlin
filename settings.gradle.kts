@@ -48,15 +48,19 @@ dependencyResolutionManagement {
     }
 
     versionCatalogs {
-        create("libs") {
-            val kotlin_version: String? by settings
-            if (kotlin_version != null) {
-                version("kotlin-version", kotlin_version)
-            }
+        all {
+            if (name == "libs") {
+                val kotlinVersionOverride = providers.gradleProperty("kotlin_version")
+                if (kotlinVersionOverride.isPresent) {
+                    println("[Main AWS SDK Build] Overriding kotlin-version to ${kotlinVersionOverride.get()}")
+                    version("kotlin-version", kotlinVersionOverride.get())
+                }
 
-            val ksp_version: String? by settings
-            if (ksp_version != null) {
-                version("ksp-version", ksp_version)
+                val kspVersionOverride = providers.gradleProperty("ksp_version")
+                if (kspVersionOverride.isPresent) {
+                    println("[Main AWS SDK Build] Overriding ksp-version to ${kspVersionOverride.get()}")
+                    version("ksp-version", kspVersionOverride.get())
+                }
             }
         }
     }
