@@ -7,10 +7,17 @@ rootProject.name = "buildSrc"
 
 pluginManagement {
     repositories {
-        gradlePluginPortal()
-        mavenCentral()
         val kotlin_repo_url: String? by settings
         kotlin_repo_url?.let { maven(it) }
+        gradlePluginPortal()
+        mavenCentral()
+    }
+    val kotlinVersion = providers.gradleProperty("kotlin_version").get()
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.id.startsWith("org.jetbrains.kotlin"))
+                useVersion(kotlinVersion)
+        }
     }
 }
 
