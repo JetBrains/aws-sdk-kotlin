@@ -261,6 +261,16 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompileCommon> {
     dependsOn(tasks.generateSmithyProjections)
 }
 
+// Disable all Native tests until DefaultRegionProviderChain Native implementation is completed
+// The Native implementation currently has TODO stubs that throw NotImplementedError
+// See: aws-runtime/aws-config/native/src/aws/sdk/kotlin/runtime/region/DefaultRegionProviderChainNative.kt
+afterEvaluate {
+    tasks.findByName("linuxX64Test")?.enabled = false
+    tasks.findByName("macosX64Test")?.enabled = false
+    tasks.findByName("macosArm64Test")?.enabled = false
+    tasks.findByName("mingwX64Test")?.enabled = false
+}
+
 tasks.withType<org.gradle.jvm.tasks.Jar> {
     if (name == "jar") {
         println("Disabling $project task '$name' because it conflicts with Kotlin JAR tasks")
