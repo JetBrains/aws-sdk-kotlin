@@ -55,12 +55,6 @@ dependencyResolutionManagement {
                     println("[Main AWS SDK Build] Overriding kotlin-version to ${kotlinVersionOverride.get()}")
                     version("kotlin-version", kotlinVersionOverride.get())
                 }
-
-                val kspVersionOverride = providers.gradleProperty("ksp_version")
-                if (kspVersionOverride.isPresent) {
-                    println("[Main AWS SDK Build] Overriding ksp-version to ${kspVersionOverride.get()}")
-                    version("ksp-version", kspVersionOverride.get())
-                }
             }
         }
     }
