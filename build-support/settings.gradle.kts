@@ -8,8 +8,18 @@ pluginManagement {
     repositories {
         gradlePluginPortal()
         mavenCentral()
-        val kotlin_repo_url: String? by settings
-        kotlin_repo_url?.let { maven(it) }
+        val kotlinRepoUrl = providers.gradleProperty("kotlin_repo_url").orNull
+        val kotlinVersion = providers.gradleProperty("kotlin_version").orNull
+        if (!kotlinRepoUrl.isNullOrEmpty() && !kotlinVersion.isNullOrEmpty()) {
+            exclusiveContent {
+                forRepository {
+                    maven(kotlinRepoUrl)
+                }
+                filter {
+                    includeVersionByRegex("org.jetbrains.kotlin.*", ".*", kotlinVersion)
+                }
+            }
+        }
     }
 }
 
@@ -17,8 +27,18 @@ dependencyResolutionManagement {
     repositories {
         gradlePluginPortal()
         mavenCentral()
-        val kotlin_repo_url: String? by settings
-        kotlin_repo_url?.let { maven(it) }
+        val kotlinRepoUrl = providers.gradleProperty("kotlin_repo_url").orNull
+        val kotlinVersion = providers.gradleProperty("kotlin_version").orNull
+        if (!kotlinRepoUrl.isNullOrEmpty() && !kotlinVersion.isNullOrEmpty()) {
+            exclusiveContent {
+                forRepository {
+                    maven(kotlinRepoUrl)
+                }
+                filter {
+                    includeVersionByRegex("org.jetbrains.kotlin.*", ".*", kotlinVersion)
+                }
+            }
+        }
     }
 
     versionCatalogs {
